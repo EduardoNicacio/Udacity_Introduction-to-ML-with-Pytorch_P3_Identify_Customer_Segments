@@ -15,11 +15,3 @@ downloaded within 2 weeks after your completion of the **Unsupervised
 Learning** and **Bertelsmann Capstone** projects and the program. If you
 do not agree to these additional terms, you will not be allowed to
 access the data for this project.
-
-<div class="terms-and-conditions-pdf">
-<object data="/tree/terms_and_conditions/terms.pdf" type="application/pdf" width="100%">
-    <p>It appears you do not have a PDF plugin for this browser.
-        You can <a href="/tree/terms_and_conditions/terms.pdf">click here to download the PDF file.</a>
-    </p>
-</object>
-</div>
