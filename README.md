@@ -1,8 +1,8 @@
 # Identify Customer Segments
 
-> An unsupervised learning pipeline that clusters German demographic data to identify which population segments are most likely to respond to a mail-order sales campaign — built for Bertelsmann Arvato Analytics using real-world proprietary data.
+> An unsupervised learning pipeline that clusters German demographic data to identify which population segments over-index in a mail-order customer base — built for Bertelsmann Arvato Analytics using real-world proprietary data. The segments below are audience *hypotheses* to validate against campaign response data.
 
-**Verdict: target clusters 3 and 4.** Together they represent only **18.8% of the general population** yet account for **50.4% of all customers** — a combined lift of ~2.7×. The strongest non-targets (clusters 1, 5 and 8) collectively cover ~26.7% of the population but only ~3.1% of customers.
+**Verdict: cluster 3 is the promising audience hypothesis.** It represents only **6.8% of the general population** yet accounts for **24.8% of all customers** — a 3.67× lift. The under-represented clusters 5, 1, 4 and 8 (ratios 0.09–0.19) are lower-priority hypotheses: together ~33.7% of the population but only ~4.1% of customers. A fourth group also sits above the line — the set-aside high-missingness stratum (label −1: 11.1% of population vs. 26.5% of customers, ratio 2.39) — but it is a data-completeness finding, not a demographic segment. All shares are computed over the full datasets (891,221 and 191,652 rows) and each proportion column sums to 1.0.
 
 ---
 
@@ -12,24 +12,25 @@
 
 | Cluster | Population % | Customers % | Ratio | Signal |
 | :--- | ---: | ---: | ---: | :--- |
-| **3** | **7.6%** | **24.8%** | **3.27** | ✅ Core target — green-avantgarde, high-income, settled men |
-| **4** | **11.2%** | **25.6%** | **2.28** | ✅ Core target — young women, 1980s–90s cohort, dreamy/idealistic |
-| 9 | 11.6% | 15.2% | 1.31 | Mildly overrepresented |
-| 2 | 7.4% | 9.0% | 1.21 | Neutral |
-| 7 | 12.1% | 8.3% | 0.69 | Neutral |
-| 0 | 11.0% | 6.8% | 0.62 | Neutral |
-| **6** | **12.4%** | **7.3%** | **0.59** | ❌ Weakly underrepresented |
-| **8** | **8.2%** | **1.5%** | **0.19** | ❌ Strongly underrepresented — event-oriented young men |
-| **1** | **8.2%** | **0.7%** | **0.09** | ❌ Strongly underrepresented — young women, no financial engagement |
-| **5** | **10.3%** | **0.8%** | **0.08** | ❌ Strongly underrepresented — young men, no financial engagement |
+| **3** | **6.8%** | **24.8%** | **3.67** | ✅ Core audience hypothesis — green-avantgarde, high-income, settled men |
+| **−1 (set-aside)** | **11.1%** | **26.5%** | **2.39** | ⚠ High-missingness stratum — data-completeness finding, no centroid |
+| 9 | 10.3% | 14.3% | 1.39 | Mildly overrepresented |
+| 2 | 6.6% | 9.0% | 1.36 | Neutral |
+| 7 | 10.7% | 8.1% | 0.75 | Neutral (mildly underrepresented) |
+| 0 | 9.8% | 6.3% | 0.65 | Neutral (mildly underrepresented) |
+| 6 | 11.1% | 7.1% | 0.64 | Neutral (mildly underrepresented) |
+| **8** | **7.3%** | **1.4%** | **0.19** | ❌ Lower-priority hypothesis — event-oriented young men |
+| **4** | **10.0%** | **1.2%** | **0.12** | ❌ Lower-priority hypothesis — young women, 1980s–90s, dreamy/non-investing |
+| **1** | **7.3%** | **0.7%** | **0.10** | ❌ Lower-priority hypothesis — event-oriented young men |
+| **5** | **9.2%** | **0.8%** | **0.09** | ❌ Lower-priority hypothesis — young women, no financial engagement |
 
 ### Principal component interpretations
 
 | Component | Variance | Positive pole | Negative pole | Interpretation |
 | :--- | ---: | :--- | :--- | :--- |
-| PC1 | 17.2% | `MOBI_REGIO`, `KBA05_ANTG1`, `PLZ8_ANTG1`, `FINANZ_MINIMALIST` | `PLZ8_ANTG3/4`, `PLZ8_BAUMAX`, `WEALTH`, `ORTSGR_KLS9` | Settled low-rise suburban/financially active ↔ affluent dense-urban apartment dweller |
-| PC2 | 13.1% | `ALTERSKATEGORIE_GROB`, `FINANZ_VORSORGER`, `SEMIO_ERL` | `DECADE`, `SEMIO_REL`, `SEMIO_TRADV`, `FINANZ_SPARER` | Traditional cautious older households ↔ secular non-saving modern youth |
-| PC3 | 9.2% | `ANREDE_KZ` (female), `SEMIO_KAEM/DOM/KRIT` (low) | `SEMIO_VERT/SOZ/FAM/KULT` (high affinity), `FINANZ_MINIMALIST` | Calm detached female personality ↔ assertive pragmatic male personality |
+| PC1 | 17.2% | `MOBI_REGIO`, `KBA05_ANTG1`, `PLZ8_ANTG1`, `KBA05_GBZ`, `FINANZ_MINIMALIST` | `PLZ8_ANTG3/4`, `PLZ8_BAUMAX`, `WEALTH` (high = *poor*), `ORTSGR_KLS9` | Settled, financially active low-rise suburban/small-town ↔ lower-income dense-urban apartment dwellers in large cities |
+| PC2 | 13.1% | `ALTERSKATEGORIE_GROB`, `FINANZ_VORSORGER` (high = *weak* preparedness affinity), `SEMIO_ERL`, `SEMIO_LUST`, `RETOURTYP_BK_S` | `DECADE`, `SEMIO_REL`, `SEMIO_TRADV`, `SEMIO_PFLICHT`, `FINANZ_SPARER` | Older conventional cohort (age contrast — **not** higher financial preparedness) ↔ secular, non-traditional, non-saving 1990s youth |
+| PC3 | 9.2% | `ANREDE_KZ` (female); high dreamful/social/family/cultural affinity; low combative/dominant/critical/rational affinity | Male; low dreamful/social/family/cultural affinity; high combative/dominant/critical/rational affinity | Socially warm, culturally engaged ↔ assertive-pragmatic personality contrast |
 
 The full weight tables for all 30 components are embedded in the notebook's Step 2.3 cells.
 
@@ -45,10 +46,12 @@ AZDIAS (891,221 × 85)                     CUSTOMERS (191,652 × 85)
   │    TITEL_KZ 99.8%, AGER_TYP 77.0%,      │  .transform() only — no re-fit
   │    KK_KUNDENTYP 65.6%, KBA05_BAUMAX 53.5%│                            │
   │    GEBURTSJAHR 44.0%, ALTER_HH 34.8%     │                            │
-  ├─ Split rows on missingness threshold     │                            │
-  │    ├─ retained:  792,287 rows (88.9%)    │                            │
-  │    └─ set aside:  98,934 rows (11.1%)    │                            │
-  ├─ Drop 15 multi-level categoricals        │                            │
+  ├─ Row quality over QUALITY_COLUMNS        ├─ Row quality: same 79 cols, │
+  │    (79 cols, pre-engineering)            │    same threshold, mask     │
+  │    same 15-missing threshold             │    aligned to original index│
+  │    ├─ retained:  792,287 rows (88.9%)    │    ├─ 140,898 → pipeline    │
+  │    └─ set aside:  98,934 rows (11.1%)    │    └─ 50,754 set aside(26.5%)│
+  ├─ Drop 13 multi-level categoricals        │                            │
   ├─ Re-encode OST_WEST_KZ (O→0, W→1)       │                            │
   ├─ Engineer DECADE + MOVEMENT              │                            │
   │    from PRAEGENDE_JUGENDJAHRE            │                            │
@@ -61,13 +64,15 @@ AZDIAS (891,221 × 85)                     CUSTOMERS (191,652 × 85)
        ├─ PCA (n_components=30, 87.47% of variance) ──────────────────── ┤
        └─ KMeans (k=10, random_state=42, n_init=10) ────────────────────  ┘
             └─ azdias_labels                    └─ customers_labels
+                 (+98,934 set-aside)               (+50,754 set-aside)
+                        └── both rejoin step 3.3 as segment −1 (each column sums to 1.0)
 ```
 
 | Choice | Setting |
 | :--- | :--- |
 | Missing-value threshold (columns) | >20% → drop (6 columns removed; next highest was `KKK` at 17.7%) |
-| Missing-value threshold (rows) | Rows above threshold set aside as outlier subset (11.1% of data) |
-| Categorical handling | Binary numeric: kept; `OST_WEST_KZ` (O/W): re-encoded 0/1; multi-level (15 cols): dropped |
+| Missing-value threshold (rows) | 15 missing over the explicit 79-column `QUALITY_COLUMNS` list (post-1.1.2 drop, pre-engineering) — applied to **both** datasets: 11.1% of population rows and 26.5% of customer rows set aside as segment −1 |
+| Categorical handling | Binary numeric: kept; `OST_WEST_KZ` (O/W): re-encoded 0/1; multi-level (13 cols): dropped |
 | Mixed feature engineering | `PRAEGENDE_JUGENDJAHRE` → `DECADE` + `MOVEMENT`; `CAMEO_INTL_2015` → `WEALTH` + `LIFE_STAGE` |
 | Final feature count | 66 |
 | Imputation | `SimpleImputer(strategy='median')` — robust to the skewed count distributions in this dataset |
@@ -79,7 +84,7 @@ AZDIAS (891,221 × 85)                     CUSTOMERS (191,652 × 85)
 
 ## Getting Started
 
-**Requirements:** Python 3.8+, scikit-learn, pandas, numpy, matplotlib, seaborn, jupyter (developed on Python 3.14.7, scikit-learn 1.6).
+**Requirements:** Python 3.10+, scikit-learn, pandas, numpy, matplotlib, seaborn, jupyter (developed on Python 3.14.7, scikit-learn 1.9.1, pandas 3.0.6).
 
 ```bash
 pip install scikit-learn pandas numpy matplotlib seaborn jupyter
@@ -144,7 +149,7 @@ new_labels    = kmeans.predict(new_pca)
 
 ## Recommendation (tl;dr)
 
-Focus mailout spend on **clusters 3 and 4**. Cluster 3 (ratio 3.27×) profiles as affluent, settled, mostly male, green-avantgarde customers who are actively financially engaged — high household income (`HH_EINKOMMEN_SCORE` ≈ 2.5, where 1 = highest), strong investor and home-builder affinity (`FINANZ_ANLEGER` ≈ 1.5, `FINANZ_HAUSBAUER` ≈ 1.9), low mobility, and near-uniform avantgarde movement membership (`GREEN_AVANTGARDE` ≈ 0.97). Cluster 4 (ratio 2.28×) profiles as young women from the 1980s–90s cohorts (`DECADE` ≈ 85.5, `ALTERSKATEGORIE_GROB` ≈ 1.8) who are dreamy and idealistic rather than rational, dutiful or traditional (low `SEMIO_TRADV/PFLICHT/RAT` affinity, high `SEMIO_VERT`). Mail spend should be suppressed on clusters 5, 1 and 8 (combined ratio < 0.2, together ~26.7% of the population but ~3.1% of customers): financially disengaged young men and women with experience-oriented rather than household-shopping lifestyles are very unlikely to respond to a catalog campaign. The full segment centroid profiles, PC weight tables, and cluster proportion plots are embedded in the notebook's Step 3 cells.
+Treat **cluster 3 (ratio 3.67×)** as the promising audience hypothesis for the next mailout: affluent, settled, mostly male, green-avantgarde customers who are actively financially engaged — high household income (`HH_EINKOMMEN_SCORE` ≈ 2.5, where 1 = highest), strong investor and home-builder affinity (`FINANZ_ANLEGER` ≈ 1.5, `FINANZ_HAUSBAUER` ≈ 1.9), low mobility, and near-uniform avantgarde movement membership (`GREEN_AVANTGARDE` ≈ 0.97). Clusters 5 (0.09×), 1 (0.10×), 4 (0.12×) and 8 (0.19×) are lower-priority hypotheses — together ~33.7% of the population but only ~4.1% of existing customers — and their demotion reflects who has bought, not a prediction of who will respond, so it should be confirmed against campaign response data. The set-aside −1 stratum (2.39×, 26.5% of customer records) is a data-completeness question rather than a target: compare `customers_high` against `azdias_outliers` before deciding it is a coherent niche. The PC interpretations above apply sign-plus-coding logic (e.g. `FINANZ_VORSORGER`'s positive loading means *weaker* preparedness affinity on the inverted scale). The full segment centroid profiles, PC weight tables, and cluster proportion plots are embedded in the notebook's Step 3 cells.
 
 ---
 
